@@ -695,12 +695,12 @@ int main() {
 
   hResource = FindResourceW(NULL, MAKEINTRESOURCE(IDB_PNG1), L"PNG");
   if(!hResource) {
-    error(L"Cannot load internal resource\n\nInternal integrity violation");
+    error(L"Cannot load internal resource");
     return EXIT_FAILURE;
   }
   hMemory = LoadResource(NULL, hResource);
   if(!hMemory) {
-    error(L"Cannot load internal resource\n\nInternal integrity violation");
+    error(L"Cannot load internal resource");
     return EXIT_FAILURE;
   }
   sf::Image icon;
@@ -708,12 +708,12 @@ int main() {
 
   hResource = FindResourceW(NULL, MAKEINTRESOURCE(IDB_PNG2), L"PNG");
   if(!hResource) {
-    error(L"Cannot load internal resource\n\nInternal integrity violation");
+    error(L"Cannot load internal resource");
     return EXIT_FAILURE;
   }
   hMemory = LoadResource(NULL, hResource);
   if(!hMemory) {
-    error(L"Cannot load internal resource\n\nInternal integrity violation");
+    error(L"Cannot load internal resource");
     return EXIT_FAILURE;
   }
   texture->loadFromMemory(LockResource(hMemory), SizeofResource(NULL, hResource));
