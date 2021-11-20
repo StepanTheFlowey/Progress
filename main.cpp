@@ -42,7 +42,7 @@ class Tree {
   std::vector<Tree> tree_;
 
   //Mode
-  sf::Vector2u position_;
+  sf::Vector2i position_;
   bool isFolder_ = false;
 
   //State
@@ -281,7 +281,7 @@ public:
     isFolder_ = isFolder;
   }
 
-  void setPosition(sf::Vector2u position) {
+  void setPosition(sf::Vector2i position) {
     position_ = position;
 
     name_.setPosition(sf::Vector2f(position_) + sf::Vector2f(2, 0));
@@ -361,7 +361,7 @@ public:
     }
     buttons_.update(vtButton_);
     for(std::size_t i = 0; i < tree_.size(); i++) {
-      tree_[i].setPosition(sf::Vector2u(position_.x + 10, i == 0 ? position_.y + 30 : tree_[i - 1].getPosition().y + (tree_[i - 1].getHeight() + 1) * 30));
+      tree_[i].setPosition(sf::Vector2i(position_.x + 10, i == 0 ? position_.y + 30 : tree_[i - 1].getPosition().y + (tree_[i - 1].getHeight() + 1) * 30));
     }
     percentUpdate();
   }
@@ -382,7 +382,7 @@ public:
     return isDone_;
   }
 
-  inline sf::Vector2u getPosition() {
+  inline sf::Vector2i getPosition() {
     return position_;
   }
 
@@ -402,16 +402,16 @@ public:
   }
 
   void percentUpdate() {
-    float percent = isDone_ ? 100.0 : 0.0;
+    float percent = isDone_ ? 100.0F : 0.0F;
     if(isFolder_) {
-      float x = 0.0;
-      percent = 100.0 / static_cast<float>(tree_.size());
+      float x = 0.0F;
+      percent = 100.0F / static_cast<float>(tree_.size());
       for(auto &i : tree_) {
         if(i.getIsFolder()) {
-          x += i.getPercent() / 100.0;
+          x += i.getPercent() / 100.0F;
         }
         else {
-          x += i.getCheckValue() ? 1.0 : 0.0;
+          x += i.getCheckValue() ? 1.0F : 0.0F;
         }
       }
       percent *= x;
@@ -456,17 +456,17 @@ public:
     }
     percent_.update(vtPercent_);
     float progress = 396 * (percent / 100);
-    vtBar_[4].position.x = position_.x + 2;
-    vtBar_[4].position.y = position_.y + 2;
+    vtBar_[4].position.x = static_cast<float>(position_.x + 2);
+    vtBar_[4].position.y = static_cast<float>(position_.y + 2);
 
-    vtBar_[5].position.x = position_.x + 2;
-    vtBar_[5].position.y = position_.y + 20 - 2;
+    vtBar_[5].position.x = static_cast<float>(position_.x + 2);
+    vtBar_[5].position.y = static_cast<float>(position_.y + 20 - 2);
 
-    vtBar_[6].position.x = position_.x + progress + 2;
-    vtBar_[6].position.y = position_.y + 20 - 2;
+    vtBar_[6].position.x = static_cast<float>(position_.x + progress + 2);
+    vtBar_[6].position.y = static_cast<float>(position_.y + 20 - 2);
 
-    vtBar_[7].position.x = position_.x + progress + 2;
-    vtBar_[7].position.y = position_.y + 2;
+    vtBar_[7].position.x = static_cast<float>(position_.x + progress + 2);
+    vtBar_[7].position.y = static_cast<float>(position_.y + 2);
     bar_.update(vtBar_);
   }
 
@@ -503,7 +503,7 @@ public:
               tree_.emplace_back();
               tree_.back().setIsFolder(false);
               tree_.back().setVisible(true);
-              tree_.back().setPosition(sf::Vector2u(position_.x + 10, tree_.size() == 1 ? std::size_t(position_.y) + 30 : (tree_.end() - 2)->getPosition().y + ((tree_.end() - 2)->getHeight() + 1) * 30));
+              tree_.back().setPosition(sf::Vector2i(position_.x + 10, tree_.size() == 1 ? position_.y + 30 : (tree_.end() - 2)->getPosition().y + ((tree_.end() - 2)->getHeight() + 1) * 30));
               percentUpdate();
               isChanged_ = true;
               out = true;
@@ -512,7 +512,7 @@ public:
               tree_.emplace_back();
               tree_.back().setIsFolder(true);
               tree_.back().setVisible(true);
-              tree_.back().setPosition(sf::Vector2u(position_.x + 10, tree_.size() == 1 ? std::size_t(position_.y) + 30 : (tree_.end() - 2)->getPosition().y + ((tree_.end() - 2)->getHeight() + 1) * 30));
+              tree_.back().setPosition(sf::Vector2i(position_.x + 10, tree_.size() == 1 ? position_.y + 30 : (tree_.end() - 2)->getPosition().y + ((tree_.end() - 2)->getHeight() + 1) * 30));
               percentUpdate();
               isChanged_ = true;
               out = true;
@@ -594,7 +594,7 @@ public:
           isChanged_ = true;
           tree_.erase(tree_.begin() + i);
           for(std::size_t j = i; j < tree_.size(); j++) {
-            tree_[j].setPosition(sf::Vector2u(position_.x + 10, j == 0 ? std::size_t(position_.y) + 30 : tree_[j - 1].getPosition().y + (tree_[j - 1].getHeight() + 1) * 30));
+            tree_[j].setPosition(sf::Vector2i(position_.x + 10, j == 0 ? position_.y + 30 : tree_[j - 1].getPosition().y + (tree_[j - 1].getHeight() + 1) * 30));
           }
           percentUpdate();
           i--;
@@ -603,7 +603,7 @@ public:
         if(tree_[i].getChanged()) {
           isChanged_ = true;
           for(std::size_t j = i; j < tree_.size(); j++) {
-            tree_[j].setPosition(sf::Vector2u(position_.x + 10, j == 0 ? std::size_t(position_.y) + 30 : tree_[j - 1].getPosition().y + (tree_[j - 1].getHeight() + 1) * 30));
+            tree_[j].setPosition(sf::Vector2i(position_.x + 10, j == 0 ? position_.y + 30 : tree_[j - 1].getPosition().y + (tree_[j - 1].getHeight() + 1) * 30));
           }
           percentUpdate();
         }
@@ -721,7 +721,7 @@ int main() {
   Tree tree;
   tree.setRoot();
   load(tree);
-  tree.setPosition(sf::Vector2u(5, 5));
+  tree.setPosition(sf::Vector2i(5, 5));
 #ifdef DEBUG
   reallocStat();
 #endif // DEBUG
@@ -731,7 +731,7 @@ int main() {
   view.setSize(800, 600);
 
   uint32_t width = 400;
-  uint32_t minHeight = view.getSize().y / 2;
+  uint32_t minHeight = static_cast<uint32_t>(view.getSize().y / 2);
   uint32_t pos = 0;
 
   sf::Event event;
@@ -757,18 +757,18 @@ int main() {
         {
           view.setSize(static_cast<float>(event.size.width), static_cast<float>(event.size.height));
           width = event.size.width / 2;
-          view.setCenter(width, view.getCenter().y);
-          minHeight = view.getSize().y / 2;
+          view.setCenter(static_cast<float>(width), static_cast<float>(view.getCenter().y));
+          minHeight = static_cast<uint32_t>(view.getSize().y / 2);
           redraw = true;
           break;
         }
         case sf::Event::MouseWheelScrolled:
         {
           event.mouseWheelScroll.delta *= 20;
-          pos = view.getCenter().y;
-          view.setCenter(width, pos - event.mouseWheelScroll.delta);
+          pos = static_cast<uint32_t>(view.getCenter().y);
+          view.setCenter(static_cast<float>(width), pos - event.mouseWheelScroll.delta);
           if(pos - event.mouseWheelScroll.delta < minHeight) {
-            view.setCenter(width, minHeight);
+            view.setCenter(static_cast<float>(width), static_cast<float>(minHeight));
           }
           redraw = true;
           break;
@@ -777,18 +777,18 @@ int main() {
         {
           if(event.key.code == sf::Keyboard::Up) {
             if(pos - 10 < minHeight) {
-              view.setCenter(width, minHeight);
+              view.setCenter(static_cast<float>(width), static_cast<float>(minHeight));
             }
             else {
-              view.setCenter(width, view.getCenter().y - 10);
+              view.setCenter(static_cast<float>(width), static_cast<float>(view.getCenter().y - 10));
             }
           }
           if(event.key.code == sf::Keyboard::Down) {
             if(pos + 10 < minHeight) {
-              view.setCenter(width, minHeight);
+              view.setCenter(static_cast<float>(width), static_cast<float>(minHeight));
             }
             else {
-              view.setCenter(width, view.getCenter().y + 10);
+              view.setCenter(static_cast<float>(width), static_cast<float>(view.getCenter().y + 10));
             }
           }
           redraw = true;
