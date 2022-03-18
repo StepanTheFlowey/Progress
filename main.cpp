@@ -47,7 +47,7 @@ class Tree {
   //State
   bool isRoot_ = false;
   bool isFolder_ = false;
-  bool isVisible_ = false;
+  bool isVisible_ = true;
   bool isRenamed_ = false;
   bool isProperty_ = false; //Is property menu open
   bool isChanged_ = false;
@@ -144,7 +144,12 @@ public:
       for(rapidjson::SizeType i = 0; i < size; ++i) {
         tree_.emplace_back(new Tree);
         tree_.back()->load(reader[L"data"][i]);
-        tree_.back()->setVisible(true);
+      }
+      if(reader.HasMember(L"show")) {
+        if(!reader[L"show"].IsBool()) {
+          error(L"Member \"show\" not a bool");
+        }
+        isVisible_ = reader[L"show"].GetBool();
       }
     }
     else {
@@ -156,14 +161,16 @@ public:
   }
 
   void save(rapidjson::Writer<rapidjson::EncodedOutputStream<rapidjson::UTF16LE<>, rapidjson::FileWriteStream>, rapidjson::UTF16LE<>, rapidjson::UTF16LE<>>& writer) const {
-    writer.Key(L"type");
-    writer.Bool(isFolder_);
     writer.Key(L"name");
     writer.String(name_.getString().toWideString());
+    writer.Key(L"type");
+    writer.Bool(isFolder_);
     if(isFolder_) {
+      writer.Key(L"show");
+      writer.Bool(isVisible_);
       writer.Key(L"data");
       writer.StartArray();
-      for(std::size_t i = 0; i < tree_.size(); i++) {
+      for(std::size_t i = 0; i < tree_.size(); ++i) {
         writer.StartObject();
         tree_[i]->save(writer);
         writer.EndObject();
